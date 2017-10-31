@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.cts.application.dao.UserRepository;
 import com.cts.application.document.User;
+import com.cts.application.request.DateInRequest;
 import com.cts.application.request.DateRequest;
 import com.cts.application.request.UserRequest;
 import com.cts.application.util.DateUtils;
@@ -15,12 +16,26 @@ import com.cts.application.util.DateUtils;
 public class UserService {
 	@Autowired
 	public UserRepository userRepository;
+	
+	/**
+	 * 
+	 * @param requestedUser
+	 * @return
+	 * @throws Exception
+	 */
 	public UserRequest saveUser(UserRequest requestedUser) throws Exception{
 		User user = convertRequestToUser(requestedUser);
 		userRepository.save(user);
 		requestedUser.setUserName(user.getUserName());
 		return requestedUser;
 	}
+	
+	/**
+	 * 
+	 * @param requestedUser
+	 * @return
+	 * @throws ParseException
+	 */
 	private User convertRequestToUser(UserRequest requestedUser) throws ParseException {
 		User user = new User();
 		user.setPassword(requestedUser.getPassword());
@@ -40,6 +55,13 @@ public class UserService {
 		user.setEmailAddress(requestedUser.getEmailAddress());
 		return user;
 	}
+	
+	/**
+	 * 
+	 * @param firstName
+	 * @param dateRequest
+	 * @return
+	 */
 	private String generateUserName(String firstName, DateRequest dateRequest) {
 		String userName;
 		String day = dateRequest.getDate().getDay();
@@ -54,5 +76,38 @@ public class UserService {
 		userName = firstName + day + month;
 		return userName;
 	}
+	
+	/**
+	 * 
+	 * @param userName
+	 * @return
+	 */
+	public UserRequest validateUser(String userName) {
+		UserRequest userRequest = null;
+		User user = userRepository.findOne(userName);
+		if(user!=null) {
+			userRequest = convertUserToRequest(user);
+		}
+		
+		return userRequest;
+	}
+	
+	/**
+	 * 
+	 * @param user
+	 * @return
+	 */
+	private UserRequest convertUserToRequest(User user) {
+		UserRequest userReq = new UserRequest();
+		
+		userReq.setFirstName(user.getFirstName());
+		userReq.setLastName(user.getLastName());
+		userReq.setUserName(user.getUserName());
+		
+		return userReq;
+		
+	}
+
+	
 	
 }

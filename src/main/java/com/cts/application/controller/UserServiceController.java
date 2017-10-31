@@ -53,17 +53,20 @@ public class UserServiceController {
 		dataMap.put("user", user);
 		return dataMap;
 	}
+	
 
-	/*@RequestMapping("/read")
-	public Map<String, Object> read(@RequestParam String policyId) {
-		User user = userRepository.findOne(policyId);
+	@CrossOrigin
+	@RequestMapping("/read")
+	public Map<String, Object> read(@RequestParam String userName) {
+		UserRequest user = userService.validateUser(userName);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("message", "User found successfully");
 		dataMap.put("status", "1");
-		dataMap.put("policy > ", user);
+		dataMap.put("user", user);
 		return dataMap;
 	}
 
+	/*
 	@RequestMapping("/update")
 	public Map<String, Object> update(@RequestParam String policyId, @RequestParam String policyDetails) {
 		User user = userRepository.findOne(policyId);
