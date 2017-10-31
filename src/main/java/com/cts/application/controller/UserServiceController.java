@@ -57,11 +57,17 @@ public class UserServiceController {
 
 	@CrossOrigin
 	@RequestMapping("/read")
-	public Map<String, Object> read(@RequestParam String userName) {
-		UserRequest user = userService.validateUser(userName);
+	public Map<String, Object> read(@RequestParam String userName, @RequestParam String password) {
+		UserRequest user = userService.validateUser(userName, password);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		dataMap.put("message", "User found successfully");
-		dataMap.put("status", "1");
+		String message = "Unable to authenticate user";
+		String status = "0"; 
+		if(user != null) {
+			message = "User validated successfully";
+			status = "1";
+		}
+		dataMap.put("message", message);
+		dataMap.put("status", status);
 		dataMap.put("user", user);
 		return dataMap;
 	}

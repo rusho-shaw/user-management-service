@@ -83,11 +83,18 @@ public class UserService {
 	 * @param userName
 	 * @return
 	 */
-	public UserRequest validateUser(String userName) {
+	public UserRequest validateUser(String userName, String password) {
 		UserRequest userRequest = null;
 		User user = userRepository.findOne(userName);
-		if(user!=null) {
-			userRequest = convertUserToRequest(user);
+		if(user!=null && password!=null) {
+			String userPwd = user.getPassword();
+			if(userPwd!=null
+					&& password.length()==userPwd.length() 
+					&& password.indexOf(userPwd)==0) {
+				// System.out.println("Matched");
+				userRequest = convertUserToRequest(user);
+			}
+			
 		}
 		
 		return userRequest;
