@@ -17,6 +17,8 @@ public class User {
 	String address;
 	String contactNo;
 	String emailAddress;
+	String role;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -64,6 +66,12 @@ public class User {
 	}
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
 	}
 
 }

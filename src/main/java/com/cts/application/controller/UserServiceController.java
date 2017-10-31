@@ -56,15 +56,17 @@ public class UserServiceController {
 	
 
 	@CrossOrigin
-	@RequestMapping("/read")
-	public Map<String, Object> read(@RequestParam String userName, @RequestParam String password) {
+	@RequestMapping("/login")
+	public Map<String, Object> login(@RequestParam String userName, @RequestParam String password) {
 		UserRequest user = userService.validateUser(userName, password);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		String message = "Unable to authenticate user";
+		String message = null;
 		String status = "0"; 
-		if(user != null) {
+		if(user != null && user.getUserError().equalsIgnoreCase("N")) {
 			message = "User validated successfully";
 			status = "1";
+		}else {
+			message = user.getUserError();
 		}
 		dataMap.put("message", message);
 		dataMap.put("status", status);
@@ -84,6 +86,17 @@ public class UserServiceController {
 		return dataMap;
 	}
 
+	/**
+	 * Operation to create Admin for DB inPCF
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping("/createAdmin")
+	public Map<String, Object> createAdmin() {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("users", userService.createAdmin());
+		return dataMap;
+	}
 	/*
 	@RequestMapping("/update")
 	public Map<String, Object> update(@RequestParam String policyId, @RequestParam String policyDetails) {

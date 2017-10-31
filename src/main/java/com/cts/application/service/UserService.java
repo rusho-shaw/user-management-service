@@ -35,6 +35,24 @@ public class UserService {
 	 * 
 	 * @param requestedUser
 	 * @return
+	 * @throws Exception
+	 */
+	
+	public UserRequest createAdmin() {
+		User user = new User();
+		user.setUserName("Admin");
+		user.setPassword("Admin");
+		user.setRole("admin");
+		userRepository.save(user);
+		UserRequest requestedUser = convertUserToRequest(user);
+		
+		return requestedUser;
+	}
+	
+	/**
+	 * 
+	 * @param requestedUser
+	 * @return
 	 * @throws ParseException
 	 */
 	private User convertRequestToUser(UserRequest requestedUser) throws ParseException {
@@ -54,6 +72,7 @@ public class UserService {
 		user.setAddress(requestedUser.getAddress());
 		user.setContactNo(requestedUser.getContactNo());
 		user.setEmailAddress(requestedUser.getEmailAddress());
+		user.setRole("user");
 		return user;
 	}
 	
@@ -84,7 +103,7 @@ public class UserService {
 	 * @return
 	 */
 	public UserRequest validateUser(String userName, String password) {
-		UserRequest userRequest = null;
+		UserRequest userRequest = new UserRequest();
 		User user = userRepository.findOne(userName);
 		if(user!=null && password!=null) {
 			String userPwd = user.getPassword();
@@ -93,8 +112,15 @@ public class UserService {
 					&& password.indexOf(userPwd)==0) {
 				// System.out.println("Matched");
 				userRequest = convertUserToRequest(user);
-			}
+				userRequest.setUserError("N");
+			} else if (user.getRole()!=null && user.getRole().equalsIgnoreCase("user")) {
+				userRequest.setUserError("You are a not registered User. Register to login");
+			} else if (user.getRole()!=null && user.getRole().equalsIgnoreCase("admin")) {
+				userRequest.setUserError("Contact Admin Service");
+			} 
 			
+		}else {
+			userRequest.setUserError("You are a not registered User. Register to login");
 		}
 		
 		return userRequest;
@@ -111,7 +137,7 @@ public class UserService {
 		userReq.setFirstName(user.getFirstName());
 		userReq.setLastName(user.getLastName());
 		userReq.setUserName(user.getUserName());
-		
+		userReq.setRole(user.getRole());
 		return userReq;
 		
 	}

@@ -10,6 +10,9 @@ public class UserRequest {
 	String address;
 	String contactNo;
 	String emailAddress;
+	String role;
+	String userError;
+	
 	public String getUserName() {
 		return userName;
 	}
@@ -57,6 +60,18 @@ public class UserRequest {
 	}
 	public void setEmailAddress(String emailAddress) {
 		this.emailAddress = emailAddress;
+	}
+	public String getRole() {
+		return role;
+	}
+	public void setRole(String role) {
+		this.role = role;
+	}
+	public String getUserError() {
+		return userError;
+	}
+	public void setUserError(String userError) {
+		this.userError = userError;
 	}
 
 }
