@@ -65,6 +65,18 @@ public class UserServiceController {
 		dataMap.put("user", user);
 		return dataMap;
 	}
+	
+	/**
+	 * Test operation to get all the users in DB inPCF
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping("/getAllUsers")
+	public Map<String, Object> getAllUsers() {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		dataMap.put("users", userService.getAllUsers());
+		return dataMap;
+	}
 
 	/*
 	@RequestMapping("/update")

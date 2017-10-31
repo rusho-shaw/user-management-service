@@ -1,5 +1,6 @@
 package com.cts.application.service;
 
+import java.util.List;
 import java.text.ParseException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -106,6 +107,16 @@ public class UserService {
 		
 		return userReq;
 		
+	}
+
+	/**
+	 * To get all users for DB in PCF
+	 * @return
+	 */
+	public List<User> getAllUsers() {
+		// TODO Auto-generated method stub
+		List<User> users = userRepository.findAll();
+		return users;
 	}
 
 	
