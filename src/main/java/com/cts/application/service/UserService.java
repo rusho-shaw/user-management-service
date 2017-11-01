@@ -1,16 +1,17 @@
 package com.cts.application.service;
 
-import java.util.List;
 import java.text.ParseException;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.cts.application.dao.UserRepository;
 import com.cts.application.document.User;
-import com.cts.application.request.DateInRequest;
-import com.cts.application.request.DateRequest;
-import com.cts.application.request.UserRequest;
+import com.cts.application.to.DateRequest;
+import com.cts.application.to.Policy;
+import com.cts.application.to.UserRequest;
 import com.cts.application.util.DateUtils;
 
 @Service
@@ -29,6 +30,26 @@ public class UserService {
 		userRepository.save(user);
 		requestedUser.setUserName(user.getUserName());
 		return requestedUser;
+	}
+	/**
+	 * 
+	 * @param requestedUser
+	 * @return
+	 * @throws Exception
+	 */
+	public boolean addPolicyForUser(String userName, Policy policy) {
+		//User user = convertRequestToUser(requestedUser);
+		boolean policyAdded = false;
+		User user = userRepository.findOne(userName);
+		List<Policy> policies = user.getPolicies();
+		if(policies==null) {
+			policies = new ArrayList<Policy> ();
+		}
+		policies.add(policy);
+		user.setPolicies(policies);
+		userRepository.save(user);
+		policyAdded = true;
+		return policyAdded;
 	}
 	
 	/**
@@ -138,6 +159,7 @@ public class UserService {
 		userReq.setLastName(user.getLastName());
 		userReq.setUserName(user.getUserName());
 		userReq.setRole(user.getRole());
+		userReq.setPolicies(user.getPolicies());
 		return userReq;
 		
 	}

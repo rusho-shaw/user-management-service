@@ -5,7 +5,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import com.cts.application.request.DateRequest;
+import com.cts.application.to.DateRequest;
 
 public class DateUtils {
 	public static Date convertDateRequestToDate(DateRequest dateRequest) throws ParseException {

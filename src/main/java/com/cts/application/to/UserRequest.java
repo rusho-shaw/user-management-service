@@ -1,4 +1,6 @@
-package com.cts.application.request;
+package com.cts.application.to;
+
+import java.util.List;
 
 public class UserRequest {
 
@@ -12,6 +14,7 @@ public class UserRequest {
 	String emailAddress;
 	String role;
 	String userError;
+	List<Policy> policies;
 	
 	public String getUserName() {
 		return userName;
@@ -72,6 +75,12 @@ public class UserRequest {
 	}
 	public void setUserError(String userError) {
 		this.userError = userError;
+	}
+	public List<Policy> getPolicies() {
+		return policies;
+	}
+	public void setPolicies(List<Policy> policies) {
+		this.policies = policies;
 	}
 
 }

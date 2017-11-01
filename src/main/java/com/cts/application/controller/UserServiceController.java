@@ -1,24 +1,23 @@
 package com.cts.application.controller;
 
-import java.util.Date;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.cts.application.dao.UserRepository;
-import com.cts.application.document.User;
-import com.cts.application.request.UserRequest;
 import com.cts.application.service.UserService;
+import com.cts.application.to.Policy;
+import com.cts.application.to.UserRequest;
 
 @RestController
 @RequestMapping("/user")
@@ -85,6 +84,32 @@ public class UserServiceController {
 		dataMap.put("users", userService.getAllUsers());
 		return dataMap;
 	}
+	/**
+	 * Test operation to add user policy in DB in PCF
+	 * @return
+	 */
+	@CrossOrigin
+	@RequestMapping("/addUserPolicy")
+	public Map<String, Object> addUserPolicy(@RequestParam String userName,
+			@RequestParam String policyId,
+			@RequestParam String policyName,
+			@RequestParam String amountPaid,
+			@RequestParam String policyEndDate) {
+		Map<String, Object> dataMap = new HashMap<String, Object>();
+		Policy policy = new Policy();
+		policy.setPolicyId(policyId);
+		//policy.setPolicyName(policyName);
+		policy.setAmountPaid(Float.parseFloat(amountPaid));
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		try {
+			policy.setPolicyEndDate(df.parse(policyEndDate));
+		} catch (ParseException e) {
+			System.out.println("In DateUtils: "+ e.getMessage());
+			//throw e;
+		}
+		dataMap.put("userPolicyAdded", userService.addPolicyForUser(userName, policy));
+		return dataMap;
+	}
 
 	/**
 	 * Operation to create Admin for DB inPCF
@@ -126,7 +151,7 @@ public class UserServiceController {
 		dataMap.put("message", "User found successfully");
 		dataMap.put("totalPolicy", users.size());
 		dataMap.put("status", "1");
-		dataMap.put("policies", users);
+		dataMap.put("policyBaks", users);
 		return dataMap;
 	}*/
 }

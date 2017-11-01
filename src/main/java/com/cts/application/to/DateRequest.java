@@ -1,4 +1,4 @@
-package com.cts.application.request;
+package com.cts.application.to;
 
 public class DateRequest {
 	DateInRequest date;

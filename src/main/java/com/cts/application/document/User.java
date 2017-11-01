@@ -1,9 +1,12 @@
 package com.cts.application.document;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+
+import com.cts.application.to.Policy;
 
 @Document
 public class User {
@@ -18,6 +21,10 @@ public class User {
 	String contactNo;
 	String emailAddress;
 	String role;
+	
+	List<Policy> policies;
+	
+	
 	
 	public String getUserName() {
 		return userName;
@@ -72,6 +79,12 @@ public class User {
 	}
 	public void setRole(String role) {
 		this.role = role;
+	}
+	public List<Policy> getPolicies() {
+		return policies;
+	}
+	public void setPolicies(List<Policy> policies) {
+		this.policies = policies;
 	}
 
 }
