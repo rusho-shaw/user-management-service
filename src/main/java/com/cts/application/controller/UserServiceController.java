@@ -92,7 +92,6 @@ public class UserServiceController {
 	@RequestMapping("/addUserPolicy")
 	public Map<String, Object> addUserPolicy(@RequestParam String userName,
 			@RequestParam String policyId,
-			@RequestParam String policyName,
 			@RequestParam String amountPaid,
 			@RequestParam String policyEndDate) {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
