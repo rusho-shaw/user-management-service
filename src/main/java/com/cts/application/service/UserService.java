@@ -27,7 +27,7 @@ public class UserService {
 	 */
 	public UserRequest saveUser(UserRequest requestedUser) throws Exception{
 		User user = convertRequestToUser(requestedUser);
-		userRepository.save(user);
+		userRepository.insert(user);
 		requestedUser.setUserName(user.getUserName());
 		return requestedUser;
 	}
