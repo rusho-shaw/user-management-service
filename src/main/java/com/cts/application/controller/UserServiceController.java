@@ -26,8 +26,6 @@ public class UserServiceController {
 	private static final String template = "Hello, %s!";
 	private final AtomicLong counter = new AtomicLong();
 
-	/*@Autowired
-	public UserRepository userRepository;*/
 	
 	@Autowired
 	private UserService userService;
