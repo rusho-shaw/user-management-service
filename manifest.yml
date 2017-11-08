@@ -1,0 +1,12 @@
+applications:
+- name: rusho-user-service
+  disk_quota: 1G
+  instances: 1
+  memory: 768M
+  routes:
+  - route: rusho-user-service.cfapps.io
+  services:
+  - mongo-mlab
+  stack: cflinuxfs2
+  timeout: 60
+  path: target\user-management-service-0.1.0.jar
