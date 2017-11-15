@@ -1,31 +1,37 @@
 package com.cts.application.controller;
 
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicLong;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.client.RestTemplate;
 
 import com.cts.application.service.UserService;
 import com.cts.application.to.Policy;
+import com.cts.application.to.TokenResp;
 import com.cts.application.to.UserRequest;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.databind.JsonMappingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RestController
 @RequestMapping("/user")
 public class UserServiceController {
-
-	private static final String template = "Hello, %s!";
-	private final AtomicLong counter = new AtomicLong();
-
 	
 	@Autowired
 	private UserService userService;
@@ -51,10 +57,10 @@ public class UserServiceController {
 		return dataMap;
 	}
 	
-
 	@CrossOrigin
 	@RequestMapping("/login")
 	public Map<String, Object> login(@RequestParam String userName, @RequestParam String password) {
+		TokenResp token = getToken();
 		UserRequest user = userService.validateUser(userName, password);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		String message = null;
@@ -68,7 +74,37 @@ public class UserServiceController {
 		dataMap.put("message", message);
 		dataMap.put("status", status);
 		dataMap.put("user", user);
+		dataMap.put("token", token);
 		return dataMap;
+	}
+	
+	private TokenResp getToken()
+	{
+	    final String uri = "https://gateway.api.cloud.wso2.com:443/token?grant_type=client_credentials";
+	     
+	    RestTemplate restTemplate = new RestTemplate();
+	     
+	    HttpHeaders headers = new HttpHeaders();
+	    headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
+	    headers.set("Authorization", "Basic Qk8yTEtZYkhTMkNxR1Z3QVRkNHRzTk53eVh3YTpYM2ZhbHd6RGhVZlhGWGowNUVnOTVHajZWdGdh");
+	    HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
+	     
+	    ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+	    TokenResp token = null;
+	    System.out.println(result);
+	    try {
+	    	token = new ObjectMapper().readValue(result.getBody(), TokenResp.class);
+		} catch (JsonParseException e) {
+			// TODO Auto-generated catch block
+			// throw new PolicyException(e.getMessage());
+		} catch (JsonMappingException e) {
+			// TODO Auto-generated catch block
+			// throw new PolicyException(e.getMessage());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			// throw new PolicyException(e.getMessage());
+		}
+	    return token;
 	}
 	
 	/**
