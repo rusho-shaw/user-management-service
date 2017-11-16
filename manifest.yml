@@ -4,7 +4,7 @@ applications:
   instances: 1
   memory: 768M
   routes:
-  - route: rusho-user-service.cfapps.io
+  - route: rs-user-service.cfapps.io
   services:
   - mongo-mlab
   stack: cflinuxfs2
