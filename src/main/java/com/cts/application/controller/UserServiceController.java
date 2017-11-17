@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.client.RestTemplate;
 
+import com.cts.application.service.TokenService;
 import com.cts.application.service.UserService;
 import com.cts.application.to.Policy;
 import com.cts.application.to.TokenResp;
@@ -36,6 +37,9 @@ public class UserServiceController {
 	@Autowired
 	private UserService userService;
 
+	@Autowired
+	private TokenService tokenService;
+	
 	@CrossOrigin
 	@PutMapping("/save")
 	public Map<String, Object> saveUser(@RequestBody UserRequest user) {
@@ -62,7 +66,8 @@ public class UserServiceController {
 	@CrossOrigin
 	@RequestMapping("/login")
 	public Map<String, Object> login(@RequestParam String userName, @RequestParam String password) {
-		TokenResp token = getToken();
+		TokenResp token = tokenService.getToken();
+		System.out.println("Token is: " + token);
 		UserRequest user = userService.validateUser(userName, password);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		String message = null;
@@ -80,34 +85,7 @@ public class UserServiceController {
 		return dataMap;
 	}
 
-	private TokenResp getToken() {
-		final String uri = "https://gateway.api.cloud.wso2.com:443/token?grant_type=client_credentials";
-
-		RestTemplate restTemplate = new RestTemplate();
-
-		HttpHeaders headers = new HttpHeaders();
-		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
-		headers.set("Authorization",
-				"Basic Qk8yTEtZYkhTMkNxR1Z3QVRkNHRzTk53eVh3YTpYM2ZhbHd6RGhVZlhGWGowNUVnOTVHajZWdGdh");
-		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
-
-		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
-		TokenResp token = null;
-		System.out.println(result);
-		try {
-			token = new ObjectMapper().readValue(result.getBody(), TokenResp.class);
-		} catch (JsonParseException e) {
-			// TODO Auto-generated catch block
-			// throw new PolicyException(e.getMessage());
-		} catch (JsonMappingException e) {
-			// TODO Auto-generated catch block
-			// throw new PolicyException(e.getMessage());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			// throw new PolicyException(e.getMessage());
-		}
-		return token;
-	}
+	
 
 	/**
 	 * Test operation to get all the users in DB inPCF
