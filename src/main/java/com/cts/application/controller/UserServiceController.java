@@ -118,11 +118,12 @@ public class UserServiceController {
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
 		try {
 			policy.setPolicyEndDate(df.parse(policyEndDate));
+			dataMap.put("userPolicyAdded", userService.addPolicyForUser(userName, policy));
 		} catch (ParseException e) {
-			System.out.println("In DateUtils: " + e.getMessage());
-			// throw e;
+			System.out.println("In addUserPolicy: " + e.getMessage());
+			dataMap.put("userPolicyAdded", false);
 		}
-		dataMap.put("userPolicyAdded", userService.addPolicyForUser(userName, policy));
+		
 		return dataMap;
 	}
 

@@ -2,7 +2,13 @@ package com.cts.application.controller;
 
 import static org.mockito.Mockito.mock;
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.After;
@@ -23,6 +29,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cts.application.document.User;
@@ -30,6 +37,7 @@ import com.cts.application.service.TokenService;
 import com.cts.application.service.UserService;
 import com.cts.application.to.DateInRequest;
 import com.cts.application.to.DateRequest;
+import com.cts.application.to.Policy;
 import com.cts.application.to.TokenResp;
 import com.cts.application.to.UserRequest;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -49,8 +57,7 @@ public class UserServiceControllerTest {
 	private TokenService tokenService;
 
 	private static TokenResp token;
-	
-	
+
 	@BeforeClass
 	public static void setToken() {
 		TokenResp tokenResp = new TokenResp();
@@ -60,9 +67,10 @@ public class UserServiceControllerTest {
 		tokenResp.setExpires_in(3600);
 		token = tokenResp;
 	}
+
 	@Before
 	public void initializeSaveUser() {
-		this.requestedUser = getReqUser();		
+		this.requestedUser = getReqUser();
 		this.responseUser = getResUser();
 	}
 
@@ -95,7 +103,7 @@ public class UserServiceControllerTest {
 	public void initilaizeSaveUSerExceptionScenarion() {
 		this.requestedUser = getReqUser();
 	}
-	
+
 	@Test
 	public void saveUserThrowsException() throws Exception {
 
@@ -110,15 +118,13 @@ public class UserServiceControllerTest {
 				.contentType(MediaType.APPLICATION_JSON_UTF8);
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		
-		System.out.println("String resp Exceptoin Screnario:.....  "+ result.getResponse().getContentAsString());
+
+		System.out.println("String resp Exceptoin Screnario:.....  " + result.getResponse().getContentAsString());
 
 		String expected = "{\"message\":\"Error: User details not saved\",\"user\":null,\"status\":\"0\"}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 
 	}
-
-	
 
 	@Before
 	public void initializeAdminLogin() {
@@ -153,8 +159,7 @@ public class UserServiceControllerTest {
 		System.out.println("initializeAdminLoginFail...");
 		user.setUserError("Contact Admin Service");
 		Mockito.when(tokenService.getToken()).thenReturn(token);
-		Mockito.when(userService.validateUser(Matchers.any(String.class), Matchers.any(String.class)))
-				.thenReturn(user);
+		Mockito.when(userService.validateUser(Matchers.any(String.class), Matchers.any(String.class))).thenReturn(user);
 		String userName = "Admin";
 		String password = "abcd";
 
@@ -169,6 +174,78 @@ public class UserServiceControllerTest {
 				+ ":null,\"role\":null,\"userError\":\"Contact Admin Service\",\"policies\""
 				+ ":null},\"status\":\"0\",\"token\":{\"access_token\":\"7d790b65-4c9b-300d-b3b8-3e8ac8365e1a\",\"scope\""
 				+ ":\"am_application_scope default\",\"token_type\":\"Bearer\",\"expires_in\":3600}}";
+		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+	}
+
+	@Test
+	public void testGetAllUsers() throws Exception {
+		User user = new User();
+		user.setUserName("Testabc");
+		Policy policy = new Policy();
+		policy.setPolicyId("1");
+		policy.setAmountPaid(110.55f);
+		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
+		policy.setPolicyEndDate(df.parse("02-02-2017"));
+		List<Policy> policies = new ArrayList<Policy>();
+		policies.add(policy);
+		user.setPolicies(policies);
+		List<User> userList = new ArrayList<User>();
+		userList.add(user);
+		Mockito.when(userService.getAllUsers()).thenReturn(userList);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/getAllUsers/");
+		System.out.println("During testGetAllUsers");
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		System.out.println("get all users::"+ result.getResponse().getContentAsString());
+		String expected = "{\"users\":[{\"userName\":\"Testabc\",\"password\":null,\"firstName\":null,\"lastName\""
+				+ ":null,\"dateOfBirth\":null,\"address\":null,\"contactNo\":null,\"emailAddress\":null,\"role\""
+				+ ":null,\"policies\":[{\"policyId\":\"1\",\"amountPaid\":110.55,\"policyEndDate\":-61927392600000}]}]}";
+		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+	}
+
+	@Test
+	public void addUserPolicySuccess() throws Exception {
+		
+		Mockito.when(userService.addPolicyForUser(Matchers.any(String.class), Matchers.any(Policy.class))).thenReturn(true);
+		String userName = "Test2401";
+		String policyId = "1";
+		String amountPaid = "100.45";
+		String policyEndDate = "2017-11-20";
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/")
+				.param("userName", userName)
+				.param("policyId", policyId)
+				.param("amountPaid", amountPaid)
+				.param("policyEndDate", policyEndDate);
+		System.out.println("During addUserPolicySuccess");
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		System.out.println("adduserPolicysuccess:.."+result.getResponse().getContentAsString());
+
+		String expected = "{\"userPolicyAdded\":true}";
+		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
+	}
+	
+	@Test
+	public void addUserPolicyException() throws Exception {
+		
+		Mockito.when(userService.addPolicyForUser(Matchers.any(String.class), Matchers.any(Policy.class))).thenReturn(true);
+		String userName = "Test2401";
+		String policyId = "1";
+		String amountPaid = "100.45";
+		String policyEndDate = "abcd";
+
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/")
+				.param("userName", userName)
+				.param("policyId", policyId)
+				.param("amountPaid", amountPaid)
+				.param("policyEndDate", policyEndDate);
+		System.out.println("During addUserPolicySuccess");
+
+		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		System.out.println("adduserPolicysuccess:.."+result.getResponse().getContentAsString());
+
+		String expected = "{\"userPolicyAdded\":false}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
 	
@@ -192,6 +269,7 @@ public class UserServiceControllerTest {
 		user.setEmailAddress("test@test.com");
 		return user;
 	}
+
 	private UserRequest getResUser() {
 		UserRequest user1 = new UserRequest();
 		user1.setUserName("Testabcd0111");
@@ -209,7 +287,7 @@ public class UserServiceControllerTest {
 		user1.setEmailAddress("test@test.com");
 		return user1;
 	}
-	
+
 	private UserRequest getAdminResUser() {
 		UserRequest user = new UserRequest();
 		user.setUserName("Admin");
