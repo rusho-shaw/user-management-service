@@ -1,0 +1,12 @@
+{"properties": [
+  {
+    "name": "wso2.token.uri",
+    "type": "java.lang.String",
+    "description": "This is my URL for getting the wso2 token for this application "
+  },
+  {
+    "name": "wso2.token.key",
+    "type": "java.lang.String",
+    "description": "The token key for fetching the token.'"
+  }
+]}

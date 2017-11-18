@@ -70,9 +70,10 @@ public class UserServiceController {
 		System.out.println("Token is: " + token);
 		UserRequest user = userService.validateUser(userName, password);
 		Map<String, Object> dataMap = new HashMap<String, Object>();
-		String message = null;
+		String message = "Not able to validate user.";
 		String status = "0";
-		if (user != null && user.getUserError().equalsIgnoreCase("N")) {
+		if (user != null && user.getUserError().equalsIgnoreCase("N")
+				&& token !=null && token.getAccess_token()!=null) { 
 			message = "User validated successfully";
 			status = "1";
 		} else {
@@ -129,12 +130,12 @@ public class UserServiceController {
 	 * Operation to create Admin for DB inPCF
 	 * 
 	 * @return
-	 */
+	 *//*
 	@CrossOrigin
 	@RequestMapping("/createAdmin")
 	public Map<String, Object> createAdmin() {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		dataMap.put("users", userService.createAdmin());
 		return dataMap;
-	}
+	}*/
 }

@@ -2,6 +2,9 @@ package com.cts.application.service;
 
 import java.io.IOException;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.env.Environment;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -17,19 +20,29 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
 public class TokenService {
+	
+	@Value("${wso2.token.uri}")
+	private String wso2TokenUri;
+	
+	@Value("${wso2.token.key}")
+	private String wso2TokenKey;
+	
+	@Autowired
+	private Environment environment;
 
 	public TokenResp getToken() {
-		final String uri = "https://gateway.api.cloud.wso2.com:443/token?grant_type=client_credentials";
-
+		//final String uri = "https://gateway.api.cloud.wso2.com:443/token?grant_type=client_credentials";
+		System.out.println("wso2TokenUri: " + wso2TokenUri);
+		
 		RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);
 		headers.set("Authorization",
-				"Basic Qk8yTEtZYkhTMkNxR1Z3QVRkNHRzTk53eVh3YTpYM2ZhbHd6RGhVZlhGWGowNUVnOTVHajZWdGdh");
+				"Basic " + wso2TokenKey);
 		HttpEntity<String> entity = new HttpEntity<String>("parameters", headers);
 
-		ResponseEntity<String> result = restTemplate.exchange(uri, HttpMethod.POST, entity, String.class);
+		ResponseEntity<String> result = restTemplate.exchange(wso2TokenUri, HttpMethod.POST, entity, String.class);
 		TokenResp token = null;
 		System.out.println(result);
 		try {
