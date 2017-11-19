@@ -175,7 +175,7 @@ public class UserServiceControllerTest {
 		policy.setPolicyId("1");
 		policy.setAmountPaid(110.55f);
 		DateFormat df = new SimpleDateFormat("yyyy-MM-dd");
-		policy.setPolicyEndDate(df.parse("02-02-2017"));
+		//policy.setPolicyEndDate(df.parse("02-02-2017"));
 		List<Policy> policies = new ArrayList<Policy>();
 		policies.add(policy);
 		user.setPolicies(policies);
@@ -189,7 +189,7 @@ public class UserServiceControllerTest {
 		System.out.println("get all users::" + result.getResponse().getContentAsString());
 		String expected = "{\"users\":[{\"userName\":\"Testabc\",\"password\":null,\"firstName\":null,\"lastName\""
 				+ ":null,\"dateOfBirth\":null,\"address\":null,\"contactNo\":null,\"emailAddress\":null,\"role\""
-				+ ":null,\"policies\":[{\"policyId\":\"1\",\"amountPaid\":110.55,\"policyEndDate\":-61927392600000}]}]}";
+				+ ":null,\"policies\":[{\"policyId\":\"1\",\"amountPaid\":110.55,\"policyEndDate\":null}]}]}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
 
