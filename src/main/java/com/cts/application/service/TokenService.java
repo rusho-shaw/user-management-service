@@ -16,7 +16,6 @@ import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.client.RestTemplate;
 
 import com.cts.application.to.TokenResp;
@@ -25,7 +24,6 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Service
-@ContextConfiguration
 public class TokenService {
 	
 	@Value("${wso2.token.uri}")
@@ -40,7 +38,7 @@ public class TokenService {
 	static class TokenServiceTestContextConfiguration {
 		@Bean
 		public RestTemplate restTemplate() {
-			return Mockito.mock(RestTemplate.class);
+			return new RestTemplate();
 		}
 
 	}
