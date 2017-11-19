@@ -129,7 +129,7 @@ public class UserServiceControllerTest {
 		String userName = "Admin";
 		String password = "Admin";
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/login/").param("userName", userName)
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/user/login/").param("userName", userName)
 				.param("password", password);
 		System.out.println("During admin user login....");
 
@@ -153,7 +153,7 @@ public class UserServiceControllerTest {
 		String userName = "Admin";
 		String password = "abcd";
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/login/").param("userName", userName)
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.post("/user/login/").param("userName", userName)
 				.param("password", password);
 		System.out.println("During adminLoginFailed");
 
@@ -182,7 +182,7 @@ public class UserServiceControllerTest {
 		List<User> userList = new ArrayList<User>();
 		userList.add(user);
 		Mockito.when(userService.getAllUsers()).thenReturn(userList);
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/getAllUsers/");
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/getAllUsers/");
 		System.out.println("During testGetAllUsers");
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
@@ -203,7 +203,7 @@ public class UserServiceControllerTest {
 		String amountPaid = "100.45";
 		String policyEndDate = "2017-11-20";
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/").param("userName", userName)
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/addUserPolicy/").param("userName", userName)
 				.param("policyId", policyId).param("amountPaid", amountPaid).param("policyEndDate", policyEndDate);
 		System.out.println("During addUserPolicySuccess");
 
@@ -224,7 +224,7 @@ public class UserServiceControllerTest {
 		String amountPaid = "100.45";
 		String policyEndDate = "abcd";
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/").param("userName", userName)
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.get("/user/addUserPolicy/").param("userName", userName)
 				.param("policyId", policyId).param("amountPaid", amountPaid).param("policyEndDate", policyEndDate);
 		System.out.println("During addUserPolicySuccess");
 
