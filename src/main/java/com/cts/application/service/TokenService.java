@@ -27,14 +27,17 @@ public class TokenService {
 	@Value("${wso2.token.key}")
 	private String wso2TokenKey;
 	
-	@Autowired
+	/*@Autowired
 	private Environment environment;
-
+*/
+	@Autowired
+	private RestTemplate restTemplate;
+	
 	public TokenResp getToken() {
 		//final String uri = "https://gateway.api.cloud.wso2.com:443/token?grant_type=client_credentials";
 		System.out.println("wso2TokenUri: " + wso2TokenUri);
 		
-		RestTemplate restTemplate = new RestTemplate();
+		//RestTemplate restTemplate = new RestTemplate();
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_FORM_URLENCODED);

@@ -1,23 +1,15 @@
 package com.cts.application.controller;
 
-import static org.mockito.Mockito.mock;
-
 import java.text.DateFormat;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
-import org.junit.After;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
-import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.skyscreamer.jsonassert.JSONAssert;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,8 +21,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.cts.application.document.User;
 import com.cts.application.service.TokenService;
@@ -196,7 +186,7 @@ public class UserServiceControllerTest {
 		System.out.println("During testGetAllUsers");
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		System.out.println("get all users::"+ result.getResponse().getContentAsString());
+		System.out.println("get all users::" + result.getResponse().getContentAsString());
 		String expected = "{\"users\":[{\"userName\":\"Testabc\",\"password\":null,\"firstName\":null,\"lastName\""
 				+ ":null,\"dateOfBirth\":null,\"address\":null,\"contactNo\":null,\"emailAddress\":null,\"role\""
 				+ ":null,\"policies\":[{\"policyId\":\"1\",\"amountPaid\":110.55,\"policyEndDate\":-61927392600000}]}]}";
@@ -205,50 +195,46 @@ public class UserServiceControllerTest {
 
 	@Test
 	public void addUserPolicySuccess() throws Exception {
-		
-		Mockito.when(userService.addPolicyForUser(Matchers.any(String.class), Matchers.any(Policy.class))).thenReturn(true);
+
+		Mockito.when(userService.addPolicyForUser(Matchers.any(String.class), Matchers.any(Policy.class)))
+				.thenReturn(true);
 		String userName = "Test2401";
 		String policyId = "1";
 		String amountPaid = "100.45";
 		String policyEndDate = "2017-11-20";
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/")
-				.param("userName", userName)
-				.param("policyId", policyId)
-				.param("amountPaid", amountPaid)
-				.param("policyEndDate", policyEndDate);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/").param("userName", userName)
+				.param("policyId", policyId).param("amountPaid", amountPaid).param("policyEndDate", policyEndDate);
 		System.out.println("During addUserPolicySuccess");
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		System.out.println("adduserPolicysuccess:.."+result.getResponse().getContentAsString());
+		System.out.println("adduserPolicysuccess:.." + result.getResponse().getContentAsString());
 
 		String expected = "{\"userPolicyAdded\":true}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
-	
+
 	@Test
 	public void addUserPolicyException() throws Exception {
-		
-		Mockito.when(userService.addPolicyForUser(Matchers.any(String.class), Matchers.any(Policy.class))).thenReturn(true);
+
+		Mockito.when(userService.addPolicyForUser(Matchers.any(String.class), Matchers.any(Policy.class)))
+				.thenReturn(true);
 		String userName = "Test2401";
 		String policyId = "1";
 		String amountPaid = "100.45";
 		String policyEndDate = "abcd";
 
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/")
-				.param("userName", userName)
-				.param("policyId", policyId)
-				.param("amountPaid", amountPaid)
-				.param("policyEndDate", policyEndDate);
+		RequestBuilder requestBuilder = MockMvcRequestBuilders.put("/user/addUserPolicy/").param("userName", userName)
+				.param("policyId", policyId).param("amountPaid", amountPaid).param("policyEndDate", policyEndDate);
 		System.out.println("During addUserPolicySuccess");
 
 		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
-		System.out.println("adduserPolicysuccess:.."+result.getResponse().getContentAsString());
+		System.out.println("adduserPolicysuccess:.." + result.getResponse().getContentAsString());
 
 		String expected = "{\"userPolicyAdded\":false}";
 		JSONAssert.assertEquals(expected, result.getResponse().getContentAsString(), false);
 	}
-	
+
 	private UserRequest requestedUser;
 	private UserRequest responseUser;
 	private UserRequest responseAdminUser;
