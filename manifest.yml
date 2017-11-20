@@ -6,7 +6,7 @@ applications:
   routes:
   - route: rs-user-service.cfapps.io
   services:
-  - mongo-mlab
+  - mongo-user
   stack: cflinuxfs2
   timeout: 60
   path: target\user-management-service-0.1.0.jar
