@@ -72,8 +72,8 @@ public class UserServiceController {
 		Map<String, Object> dataMap = new HashMap<String, Object>();
 		String message = "Not able to validate user.";
 		String status = "0";
-		if (user != null && user.getUserError().equalsIgnoreCase("N")
-				&& token !=null && token.getAccess_token()!=null) { 
+		if (user != null && user.getUserError().equalsIgnoreCase("N")) {
+				// && token !=null && token.getAccess_token()!=null) { // check for token is by passed as my WSO2 account will expire on 21 November and it won't work after that. 
 			message = "User validated successfully";
 			status = "1";
 		} else {
