@@ -97,7 +97,7 @@ public class TokenServiceTest {
 	            Matchers.any(String.class),
 	            Matchers.any(HttpMethod.class),
 	            Matchers.<HttpEntity<String>>any(),
-	            Matchers.any(Class.class))
+	            Matchers.<Class<String>>any())
 	        ).thenReturn(result);
 		TokenResp tokenRes = tokenService.getToken();
 		System.out.println(tokenRes.getAccess_token());
